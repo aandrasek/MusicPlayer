@@ -1,0 +1,41 @@
+﻿@model SmarterMusic.ViewModels.MusicViewModel
+@{
+    ViewBag.Title = "AddMusic";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="jquery-3.3.1.min.js"></script>
+<h2>AddMusic</h2>
+
+@using (Html.BeginForm("Create", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.TextBoxFor(c => c.Name)
+    @Html.TextBoxFor(c => c.Category,new { @class="categoryName", style = "display: none;" })
+    <input type="file" name="main" />
+    <select class="category">
+        <option>HIP HOP</option>
+        <option>POP</option>
+        <option>ROCK</option>
+        <option>LATIN</option>
+        <option>ELECTRONIC</option>
+        <option>COUNTRY</option>
+        <option>ALTERNATIVE ROCK</option>
+        <option>CONTEMPORARY R&B</option>
+        <option>TRAP</option>
+        <option>HEAVY METAL</option>
+        <option>FOLK</option>
+        <option>JAZZ</option>
+        <option>AMBIENT</option>
+        <option>CLASSICAL</option>
+        <option>RAP</option>
+        <option>OTHER</option>
+    </select>
+    <input type="submit" value="ADD" />
+}
+<script>
+    setInterval(function () {
+        var s = $(".category :selected").text(); // The text content of the selected option
+        $(".categoryName").val(s);
+    },200);
+  
+
+</script>

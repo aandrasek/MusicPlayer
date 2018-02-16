@@ -1,0 +1,144 @@
+﻿@model List<SmarterMusic.Models.MusicEntity>
+<style>
+    .playlist {
+        width: 95%;
+        list-style: none;
+        margin-top: 50px;
+        border-top: #d7d7d7 1px solid;
+        padding: 0;
+        display: inline-block;
+    }
+
+        .playlist .f {
+            margin-left: 10%;
+        }
+
+        .playlist .s {
+            float: right;
+            margin-right: 0;
+            margin-top: 6px;
+            font-size: 20px;
+            color: #808080;
+        }
+
+        .playlist li a {
+            display: block;
+            margin-left: 0;
+            margin-top: 0;
+            background: #ffffff;
+            color: #000000;
+            font-size: 30px;
+            text-decoration: none;
+            border-bottom: #d7d7d7 1px solid;
+        }
+
+    .playlistremove {
+        width: 5%;
+        list-style: none;
+        margin-top: 50px;
+        border-top: #d7d7d7 1px solid;
+        padding: 0;
+        text-align: center;
+        float: right;
+    }
+
+        .playlistremove li a {
+            display: block;
+            margin-left: 0;
+            margin-top: 0;
+            background: #ffffff;
+            color: #000000;
+            font-size: 30px;
+            text-decoration: none;
+            border-bottom: #d7d7d7 1px solid;
+        }
+
+        .playlist .current-song a, .playlistremove .current-song a {
+            color: #4285f4;
+            background: #000000;
+            border: none;
+        }
+
+    .wrapper .audioPlayer {
+    }
+    audio {
+        float:right;
+        width: 100%;
+        padding-top:60px;
+        background:#fafafa;
+    }
+    .wrapper {
+        background: #fafafa;
+        width:100%;
+        height: 85px;
+        border:#4285f4 2px solid;
+        position:absolute;
+        bottom:0;
+        left:0;
+        right:0;
+        }
+</style>
+<body>
+    <ul class="playlist">
+        <li class="current-song"><a href="~/Songs/@ViewBag.first.MusicURL"> <span class="s">@ViewBag.first.Category |</span><span class="f">@ViewBag.first.Name </span></a> </li>
+        @foreach (var item in Model)
+        {
+            <li><a href="~/Songs/@item.MusicURL"><span class="s">@item.Category |</span> <span class="f">@item.Name  </span></a> </li>
+        }
+    </ul>
+    <ul class="playlistremove">
+        <li class="current-song"><a href="/Home/Remove/@ViewBag.first.ID"> <span>X</span></a> </li>
+        @foreach (var item in Model)
+        {
+            <li><a href="/Home/Remove/@item.ID"> <span>X</span></a> </li>
+        }
+    </ul>
+
+   
+        <div class="wrapper">
+            <audio controls class="audioPlayer" data-setup="{}">
+                <source class="source" src="~/Songs/t.mp3" type="audio/mp3" />
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        var currentSong = 0;
+        audioPlayer();
+        function audioPlayer() {
+
+
+            $(".audioPlayer").eq(0).attr("src", $(".playlist li a")[0])
+
+            $(".playlist li a").click(function (e) {
+                e.preventDefault();
+                $(".audioPlayer").eq(0).attr("src", this);
+                $(".source").attr("src", this);
+                $(".audioPlayer").eq(0).trigger("play");
+                $(".playlist li").removeClass("current-song");
+                $(".playlistremove li").removeClass("current-song");
+                currentSong = $(this).parent().index();
+                $(".playlist li:eq(" + currentSong + ")").addClass('current-song');
+                $(".playlistremove li:eq(" + currentSong + ")").addClass('current-song');
+            });
+            $(".audioPlayer").eq(0).on("ended", function () {
+                currentSong++;
+                if (currentSong == $(".playlist li a").length) {
+                    currentSong = 0;
+                }
+                $(".playlist li").removeClass("current-song");
+                $(".playlistremove li").removeClass("current-song");
+                $(".playlist li:eq(" + currentSong + ")").addClass('current-song');
+                $(".playlistremove li:eq(" + currentSong + ")").addClass('current-song');
+                $(".audioPlayer").eq(0).attr("src", $(".playlist li a")[currentSong]);
+                $(".source").eq(0).attr("src", $(".playlist li a")[currentSong]);
+                $(".audioPlayer").eq(0).trigger("play");
+
+            });
+
+        }
+    </script>
+</body>
